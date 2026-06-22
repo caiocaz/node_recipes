@@ -1,0 +1,41 @@
+<div class="recipe-detail-page auth-container">
+  <h2>{{recipe.title}}</h2>
+  <div class="recipe-detail-topbar">
+    <span class="recipe-category-badge">{{recipe.category}}</span>
+    <div class="recipe-detail-actions">
+      <a href="/recipes" class="btn">Voltar</a>
+      <a href="/recipes/edit/{{recipe.id}}" class="btn">Editar</a>
+      <form action="/recipes/remove" method="POST" class="inline-form">
+        <input type="hidden" name="id" value="{{recipe.id}}" />
+        <button type="submit" class="btn btn-danger">Excluir</button>
+      </form>
+    </div>
+  </div>
+  <div class="recipe-detail-card">
+    {{#if recipe.image}}
+      <img src="{{recipe.image}}" alt="{{recipe.title}}" class="recipe-detail-image" />
+    {{/if}}
+
+    <section class="recipe-detail-section">
+      <h3>Ingredientes</h3>
+      <ul class="ingredient-list">
+        {{#each recipe.ingredientRows}}
+          <li>
+            {{#if this.quantity}}{{this.quantity}}{{#if this.unit}} {{this.unit}}{{/if}} - {{/if}}{{this.ingredient}}
+          </li>
+        {{/each}}
+      </ul>
+    </section>
+
+    <section class="recipe-detail-section">
+      <h3>Modo de preparo</h3>
+      <p>{{recipe.preparation}}</p>
+    </section>
+    {{#if recipe.link}}
+    <section class="recipe-detail-section">
+      <h3>Fonte / Link</h3>
+      <p><a href="{{recipe.link}}" target="_blank" rel="noopener noreferrer">{{recipe.link}}</a></p>
+    </section>
+    {{/if}}
+  </div>
+</div>

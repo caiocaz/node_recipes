@@ -1,0 +1,166 @@
+<div class="recipes-home shopping-list-page">
+  <div class="title-container">
+    <h2>Lista de Compras</h2>
+    <small>Gerencie seus ingredientes e prepare suas receitas</small>
+  </div>
+
+  <div id="shopping-list-feedback" class="shopping-list-feedback" hidden></div>
+
+  <div class="shopping-summary">
+    <div class="shopping-summary-item">Total: <span id="shopping-total">0</span></div>
+    <div class="shopping-summary-item">Comprados: <span id="shopping-bought">0</span></div>
+    <div class="shopping-summary-item">Pendentes: <span id="shopping-pending">0</span></div>
+  </div>
+
+  <div class="shopping-actions">
+    <form id="shopping-form" class="shopping-form">
+      <div class="form-control">
+        <label for="shopping-quantity">Quantidade</label>
+        <input id="shopping-quantity" type="number" min="0" step="any" placeholder="Quantidade" required />
+      </div>
+      <div class="form-control">
+        <label for="shopping-unit">Unidade</label>
+        <div class="custom-select" data-input-name="unit">
+          <button type="button" class="custom-select__trigger" aria-haspopup="listbox" aria-expanded="false">
+            <span class="custom-select__value">Unidade</span>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          <ul class="custom-select__options" role="listbox">
+            <li class="custom-select__option" data-value="G">Gramas</li>
+            <li class="custom-select__option" data-value="KG">Quilogramas</li>
+            <li class="custom-select__option" data-value="ML">Mililitros</li>
+            <li class="custom-select__option" data-value="L">Litros</li>
+            <li class="custom-select__option active" data-value="UN">Unidade</li>
+            <li class="custom-select__option" data-value="Pitada">Pitada</li>
+            <li class="custom-select__option" data-value="Gota">Gota</li>
+            <li class="custom-select__option" data-value="Colher de Café">Colher de Café</li>
+            <li class="custom-select__option" data-value="Colher de Chá">Colher de Chá</li>
+            <li class="custom-select__option" data-value="Colher de Sobremesa">Colher de Sobremesa</li>
+            <li class="custom-select__option" data-value="Colher de Sopa">Colher de Sopa</li>
+            <li class="custom-select__option" data-value="Xícara">Xícara</li>
+            <li class="custom-select__option" data-value="Copo">Copo</li>
+            <li class="custom-select__option" data-value="Concha">Concha</li>
+            <li class="custom-select__option" data-value="Dente">Dente</li>
+            <li class="custom-select__option" data-value="Folha">Folha</li>
+            <li class="custom-select__option" data-value="Ramo">Ramo</li>
+            <li class="custom-select__option" data-value="Maço">Maço</li>
+            <li class="custom-select__option" data-value="Fatia">Fatia</li>
+            <li class="custom-select__option" data-value="Rodela">Rodela</li>
+            <li class="custom-select__option" data-value="Cubo">Cubo</li>
+            <li class="custom-select__option" data-value="Pedaco">Pedaco</li>
+            <li class="custom-select__option" data-value="Duzia">Duzia</li>
+            <li class="custom-select__option" data-value="Pacote">Pacote</li>
+            <li class="custom-select__option" data-value="Lata">Lata</li>
+            <li class="custom-select__option" data-value="Caixa">Caixa</li>
+            <li class="custom-select__option" data-value="Sache">Sache</li>
+            <li class="custom-select__option" data-value="Garrafa">Garrafa</li>
+            <li class="custom-select__option" data-value="Pote">Pote</li>
+            <li class="custom-select__option" data-value="Tablete">Tablete</li>
+            <li class="custom-select__option" data-value="Barra">Barra</li>
+          </ul>
+          <input id="shopping-unit" type="hidden" name="unit" value="un" />
+        </div>
+      </div>
+      <div class="form-control">
+        <label for="shopping-name">Ingrediente</label>
+        <input id="shopping-name" type="text" placeholder="Nome do ingrediente" required />
+      </div>
+      <div class="shopping-actions-row">
+        <button type="submit" class="btn">Adicionar Item</button>
+        <button type="button" id="shopping-clear" class="btn btn-danger">Limpar Lista</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="shopping-filter-bar">
+    <input id="shopping-search" type="search" placeholder="Pesquisar ingrediente..." />
+    <div class="shopping-filters">
+      <button type="button" class="btn btn-filter active" data-filter="all">Todos</button>
+      <button type="button" class="btn btn-filter" data-filter="pending">Pendentes</button>
+      <button type="button" class="btn btn-filter" data-filter="bought">Comprados</button>
+    </div>
+  </div>
+
+  <div id="shopping-list" class="shopping-list"></div>
+  <script>window.SHOPPING_LIST_DATA = {{{shoppingListItemsRaw}}}</script>
+
+  <!-- Edit ingredient modal -->
+  <div id="edit-ingredient-modal" class="ai-modal" aria-hidden="true">
+    <div class="ai-modal__overlay" data-close="true"></div>
+    <div class="ai-modal__content" role="dialog" aria-modal="true" aria-label="Editar ingrediente">
+      <button type="button" class="ai-modal__close" id="edit-modal-close" aria-label="Fechar">×</button>
+      <h3>Editar Ingrediente</h3>
+      <form id="edit-ingredient-form" class="ai-suggestion-form">
+        <div class="form-control">
+          <label for="edit-quantity">Quantidade</label>
+          <input id="edit-quantity" name="quantity" type="number" min="0" step="any" required />
+        </div>
+        <div class="form-control">
+          <label for="edit-unit">Unidade</label>
+          <div class="custom-select" data-input-name="unit">
+            <button type="button" class="custom-select__trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span class="custom-select__value">Unidade</span>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+            <ul class="custom-select__options" role="listbox">
+              <li class="custom-select__option" data-value="G">Gramas</li>
+              <li class="custom-select__option" data-value="KG">Quilogramas</li>
+              <li class="custom-select__option" data-value="ML">Mililitros</li>
+              <li class="custom-select__option" data-value="L">Litros</li>
+              <li class="custom-select__option active" data-value="UN">Unidade</li>
+              <li class="custom-select__option" data-value="Pitada">Pitada</li>
+              <li class="custom-select__option" data-value="Gota">Gota</li>
+              <li class="custom-select__option" data-value="Colher de Café">Colher de Café</li>
+              <li class="custom-select__option" data-value="Colher de Chá">Colher de Chá</li>
+              <li class="custom-select__option" data-value="Colher de Sobremesa">Colher de Sobremesa</li>
+              <li class="custom-select__option" data-value="Colher de Sopa">Colher de Sopa</li>
+              <li class="custom-select__option" data-value="Xícara">Xícara</li>
+              <li class="custom-select__option" data-value="Copo">Copo</li>
+              <li class="custom-select__option" data-value="Concha">Concha</li>
+              <li class="custom-select__option" data-value="Dente">Dente</li>
+              <li class="custom-select__option" data-value="Folha">Folha</li>
+              <li class="custom-select__option" data-value="Ramo">Ramo</li>
+              <li class="custom-select__option" data-value="Maço">Maço</li>
+              <li class="custom-select__option" data-value="Fatia">Fatia</li>
+              <li class="custom-select__option" data-value="Rodela">Rodela</li>
+              <li class="custom-select__option" data-value="Cubo">Cubo</li>
+              <li class="custom-select__option" data-value="Pedaco">Pedaco</li>
+              <li class="custom-select__option" data-value="Duzia">Duzia</li>
+              <li class="custom-select__option" data-value="Pacote">Pacote</li>
+              <li class="custom-select__option" data-value="Lata">Lata</li>
+              <li class="custom-select__option" data-value="Caixa">Caixa</li>
+              <li class="custom-select__option" data-value="Sache">Sache</li>
+              <li class="custom-select__option" data-value="Garrafa">Garrafa</li>
+              <li class="custom-select__option" data-value="Pote">Pote</li>
+              <li class="custom-select__option" data-value="Tablete">Tablete</li>
+              <li class="custom-select__option" data-value="Barra">Barra</li>
+            </ul>
+            <input id="edit-unit" type="hidden" name="unit" value="" />
+          </div>
+          <div class="form-control">
+            <label for="edit-name">Ingrediente</label>
+            <input id="edit-name" name="name" type="text" required />
+          </div>
+        </div>
+        <div class="form-control">
+          <label for="edit-status">Status</label>
+          <div class="custom-select" data-input-name="status">
+            <button type="button" class="custom-select__trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span class="custom-select__value">Pendente</span>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+            <ul class="custom-select__options" role="listbox">
+              <li class="custom-select__option" data-value="pending">Pendente</li>
+              <li class="custom-select__option" data-value="bought">Comprado</li>
+            </ul>
+            <input id="edit-status" type="hidden" name="status" value="pending" />
+          </div>
+        </div>
+        <div class="ai-suggestion-form-actions" style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1rem;">
+          <button type="button" class="btn" id="edit-cancel">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="edit-save">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

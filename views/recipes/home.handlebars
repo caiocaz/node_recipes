@@ -1,0 +1,119 @@
+<div class="recipes-home">
+  {{#if session.userId}}
+    <div class="recipe-top-actions">
+      <div class="recipe-search-bar">
+      <label for="recipe-search-input">Buscar receitas</label>
+      <input id="recipe-search-input" type="search" placeholder="Digite ao menos 3 letras..." autocomplete="off" />
+      </div>
+    </div>
+    {{#if aiSuggestions}}
+      <section class="ai-home-suggestions">
+        <div class="title-container">
+          <h2>Sugestões da IA</h2>
+          <small>Receitas geradas automaticamente via IA</small>
+        </div>
+        <div class="ai-suggestions-list home-list">
+          {{#each aiSuggestions}}
+            <div class="ai-suggestion-card" data-ai-index="{{@index}}" data-title="{{this.title}}" data-category="{{this.category}}" data-preview="{{this.preparation}}">
+              {{#if this.image}}
+                <div class="suggestion-image-wrap">
+                  <img src="{{this.image}}" alt="{{this.title}}" class="ai-suggestion-image" />
+                </div>
+              {{/if}}
+              <div class="suggestion-card-body">
+                <h4>{{this.title}}</h4>
+                <span class="suggestion-category">{{this.category}}</span>
+                <div class="ai-suggestion-actions">
+                  <button type="button" class="btn btn-view-recipe" data-ai-index="{{@index}}">Visualizar</button>
+                  <button type="button" class="btn btn-add-from-ai" data-ai-index="{{@index}}">Adicionar</button>
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </section>
+      <script>window.AI_SUGGESTIONS = {{{aiSuggestionsRaw}}};</script>
+      <script src="/js/ai-home-actions.js" defer></script>
+    {{/if}}
+    <div class="title-container">
+      <h2>Minhas receitas</h2>
+      <small>Suas receitas salvas</small>
+    </div>
+    <div id="shopping-list-feedback" class="shopping-list-feedback" hidden></div>
+    {{#if groupedCategories.length}}
+      {{#each groupedCategories}}
+        <section class="recipe-category-section">
+          <div class="recipe-category-header">
+            <h4>{{this.category}}</h4>
+            <span>{{this.recipes.length}} receitas</span>
+          </div>
+          <div class="category-scroll">
+            {{#each this.recipes}}
+              <article class="recipe-card-item">
+                <a href="/recipes/view/{{this.id}}" class="recipe-card-link">
+                  {{#if this.image}}
+                    <img src="{{this.image}}" alt="{{this.title}}" class="recipe-card-image" />
+                  {{else}}
+                    <div class="recipe-card-placeholder">
+                      <i class="bi bi-image"></i>
+                    </div>
+                  {{/if}}
+                  <div class="recipe-card-title">
+                    <h3>{{this.title}}</h3>
+                    {{#if this.link}}
+                      <a href="{{this.link}}" target="_blank" rel="noopener noreferrer" class="recipe-card-link-source" title="Abrir fonte" onclick="event.stopPropagation()"></a>
+                    {{/if}}
+                  </div>
+                </a>
+                <div class="recipe-card-actions">
+                  <button type="button" class="btn btn-add-to-shopping" data-recipe-title="{{this.title}}">Adicionar à Lista de Compras</button>
+                </div>
+                <script type="application/json" class="recipe-ingredients-data">{{{this.ingredientsJson}}}</script>
+              </article>
+            {{/each}}
+          </div>
+        </section>
+      {{/each}}
+    {{else}}
+      <p>Nenhuma receita registrada ainda. <a href="/recipes/add">Crie a primeira receita.</a></p>
+    {{/if}}
+    <div class="recipe-search-empty" hidden>Nenhuma receita corresponde à busca.</div>
+  {{else}}
+    <div class="auth-container">
+      <h2>Bem-vindo ao Receitas Culinárias</h2>
+      <p>Para ver e gerenciar suas receitas, faça login ou registre-se.</p>
+      <div class="tought-actions">
+        <a href="/login" class="btn">Entrar</a>
+        <a href="/register" class="btn">Registrar</a>
+      </div>
+    </div>
+  {{/if}}
+</div>
+
+<!-- Modal para exibir receita completa da IA -->
+<div id="recipeModal" class="recipe-modal" hidden>
+  <div class="recipe-modal-content">
+    <button type="button" class="recipe-modal-close" aria-label="Fechar">&times;</button>
+    <div class="recipe-modal-header">
+      <img id="modalRecipeImage" src="" alt="Receita" class="modal-recipe-image" />
+      <div class="recipe-modal-info">
+        <h2 id="modalRecipeTitle"></h2>
+        <span id="modalRecipeCategory" class="modal-recipe-category"></span>
+      </div>
+    </div>
+    <div class="recipe-modal-body">
+      <div class="recipe-section">
+        <h3>Ingredientes</h3>
+        <ul id="modalRecipeIngredients" class="recipe-ingredients-list"></ul>
+      </div>
+      <div class="recipe-section">
+        <h3>Modo de Preparo</h3>
+        <p id="modalRecipePreparation" class="recipe-preparation-text"></p>
+      </div>
+    </div>
+    <div class="recipe-modal-footer">
+      <button type="button" class="btn btn-secondary" id="modalCloseBtn">Fechar</button>
+      <button type="button" class="btn btn-primary" id="modalAddBtn">Adicionar Receita</button>
+    </div>
+  </div>
+</div>

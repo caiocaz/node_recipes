@@ -1,0 +1,133 @@
+<div class="auth-container tought-form-container">
+  <div class="create-header">
+    <h2>Nova Receita</h2>
+    <button id="ai-suggestion-button" type="button" class="btn">Sugestão da IA</button>
+  </div>
+  {{#if message}}
+    <div class="message">{{message}}</div>
+  {{/if}}
+  <div id="ai-suggestion-modal" class="ai-modal" aria-hidden="true">
+    <div class="ai-modal__overlay" data-close="true"></div>
+    <div class="ai-modal__content" role="dialog" aria-modal="true" aria-label="Sugestão de receita da IA">
+      <button type="button" class="ai-modal__close" aria-label="Fechar">×</button>
+      <h3>Peça uma sugestão de receita</h3>
+      <form class="ai-suggestion-form">
+        <label for="ai-dish-type">Tipo de prato</label>
+        <input id="ai-dish-type" type="text" placeholder="Ex: carne, frango, batata" required />
+        <button type="submit" class="btn btn-ai-submit">Buscar sugestões</button>
+      </form>
+      <div class="ai-suggestion-feedback" aria-live="polite"></div>
+      <div id="ai-suggestions-list" class="ai-suggestions-list"></div>
+    </div>
+  </div>
+  <form action="/recipes/add" method="POST" enctype="multipart/form-data">
+    <input id="imageUrl" name="image" type="hidden" value="{{recipe.image}}" />
+    <div class="form-control">
+      <label for="title">Título:</label>
+      <input id="title" name="title" type="text" value="{{recipe.title}}" placeholder="Nome da receita" required />
+    </div>
+    <div class="form-control">
+      <label for="image">Imagem da Receita:</label>
+      <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
+      <small>Opcional. Formatos aceitos: JPEG, PNG, WebP, GIF (máx 5MB)</small>
+    </div>
+    <div class="form-control">
+      <label for="category-picker">Categoria:</label>
+      <div class="custom-select" data-input-name="category">
+        <button type="button" class="custom-select__trigger" id="category-picker" aria-haspopup="listbox" aria-expanded="false">
+          <span class="custom-select__value">{{#if recipe.category}}{{recipe.category}}{{else}}Selecione uma categoria{{/if}}</span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+        <ul class="custom-select__options" role="listbox" aria-labelledby="category-picker">
+          <li class="custom-select__option" data-value="Café da Manhã">Café da Manhã</li>
+          <li class="custom-select__option" data-value="Entradas">Entradas</li>
+          <li class="custom-select__option" data-value="Saladas">Saladas</li>
+          <li class="custom-select__option" data-value="Sopas">Sopas</li>
+          <li class="custom-select__option" data-value="Pratos Principais">Pratos Principais</li>
+          <li class="custom-select__option" data-value="Massas">Massas</li>
+          <li class="custom-select__option" data-value="Lanches">Lanches</li>
+          <li class="custom-select__option" data-value="Salgados">Salgados</li>
+          <li class="custom-select__option" data-value="Pães">Pães</li>
+          <li class="custom-select__option" data-value="Bolos e Tortas">Bolos e Tortas</li>
+          <li class="custom-select__option" data-value="Sobremesas">Sobremesas</li>
+          <li class="custom-select__option" data-value="Bebidas">Bebidas</li>
+          <li class="custom-select__option" data-value="Receitas Saudáveis">Receitas Saudáveis</li>
+          <li class="custom-select__option" data-value="Receitas Rápidas">Receitas Rápidas</li>
+          <li class="custom-select__option" data-value="Air Fryer">Air Fryer</li>
+          <li class="custom-select__option" data-value="Culinária Internacional">Culinária Internacional</li>
+          <li class="custom-select__option" data-value="Datas Especiais">Datas Especiais</li>
+        </ul>
+        <input type="hidden" name="category" value="{{recipe.category}}" required />
+      </div>
+    </div>
+    <div class="form-control ingredient-group">
+      <label>Ingredientes (quantidade / unidade / ingrediente):</label>
+      <div id="ingredient-rows">
+        {{#each recipe.ingredientRows}}
+          <div class="ingredient-row">
+            <input name="quantity" type="number" value="{{this.quantity}}" placeholder="Qtd" min="0" step="any" />
+            <div class="custom-select" data-input-name="unit">
+              <button type="button" class="custom-select__trigger" aria-haspopup="listbox" aria-expanded="false">
+                <span class="custom-select__value">{{#if this.unit}}{{this.unit}}{{else}}UN{{/if}}</span>
+                <i class="bi bi-chevron-down"></i>
+              </button>
+              <ul class="custom-select__options" role="listbox">
+                <li class="custom-select__option" data-value="G">Gramas</li>
+                <li class="custom-select__option" data-value="KG">Quilogramas</li>
+                <li class="custom-select__option" data-value="ML">Mililitros</li>
+                <li class="custom-select__option" data-value="L">Litros</li>
+                <li class="custom-select__option active" data-value="UN">Unidade</li>
+                <li class="custom-select__option" data-value="Pitada">Pitada</li>
+                <li class="custom-select__option" data-value="Gota">Gota</li>
+                <li class="custom-select__option" data-value="Colher de Café">Colher de Café</li>
+                <li class="custom-select__option" data-value="Colher de Chá">Colher de Chá</li>
+                <li class="custom-select__option" data-value="Colher de Sobremesa">Colher de Sobremesa</li>
+                <li class="custom-select__option" data-value="Colher de Sopa">Colher de Sopa</li>
+                <li class="custom-select__option" data-value="Xícara">Xícara</li>
+                <li class="custom-select__option" data-value="Copo">Copo</li>
+                <li class="custom-select__option" data-value="Concha">Concha</li>
+                <li class="custom-select__option" data-value="Dente">Dente</li>
+                <li class="custom-select__option" data-value="Folha">Folha</li>
+                <li class="custom-select__option" data-value="Ramo">Ramo</li>
+                <li class="custom-select__option" data-value="Maço">Maço</li>
+                <li class="custom-select__option" data-value="Fatia">Fatia</li>
+                <li class="custom-select__option" data-value="Rodela">Rodela</li>
+                <li class="custom-select__option" data-value="Cubo">Cubo</li>
+                <li class="custom-select__option" data-value="Pedaco">Pedaco</li>
+                <li class="custom-select__option" data-value="Duzia">Duzia</li>
+                <li class="custom-select__option" data-value="Pacote">Pacote</li>
+                <li class="custom-select__option" data-value="Lata">Lata</li>
+                <li class="custom-select__option" data-value="Caixa">Caixa</li>
+                <li class="custom-select__option" data-value="Sache">Sache</li>
+                <li class="custom-select__option" data-value="Garrafa">Garrafa</li>
+                <li class="custom-select__option" data-value="Pote">Pote</li>
+                <li class="custom-select__option" data-value="Tablete">Tablete</li>
+                <li class="custom-select__option" data-value="Barra">Barra</li>
+              </ul>
+              <input type="hidden" name="unit" value="{{this.unit}}" />
+            </div>
+            <div class="ingredient-with-button">
+              <input name="ingredient" type="text" value="{{this.ingredient}}" placeholder="Ingrediente" />
+              <button type="button" class="btn-add-ingredient" title="Adicionar ingrediente">+</button>
+              <button type="button" class="btn-remove-ingredient" title="Remover ingrediente">−</button>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+      <small>Preencha pelo menos um ingrediente e use + para adicionar mais.</small>
+    </div>
+    <div class="form-control">
+      <label for="preparation">Modo de preparo:</label>
+      <textarea id="preparation" name="preparation" placeholder="Descreva o modo de preparo" required>{{recipe.preparation}}</textarea>
+    </div>
+    <div class="form-control">
+      <label for="link">Link (opcional):</label>
+      <input id="link" name="link" type="url" value="{{recipe.link}}" placeholder="https://exemplo.com/receita" />
+      <small>Informe a URL da receita de origem, se houver.</small>
+    </div>
+    <div class="tought-actions">
+      <button type="submit" class="btn">Salvar Receita</button>
+      <a href="/recipes" class="btn">Cancelar</a>
+    </div>
+  </form>
+</div>

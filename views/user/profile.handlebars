@@ -1,0 +1,27 @@
+<div class="profile-page auth-container">
+  <h2>Meu Perfil</h2>
+  {{#if messages.message}}
+    {{#each messages.message}}
+      <div class="message">{{this}}</div>
+    {{/each}}
+  {{/if}}
+  <div class="profile-info">
+    <div class="profile-row">
+      <div>
+        <strong>Nome:</strong>
+        <div>{{user.name}}</div>
+      </div>
+      <div>
+        <strong>Email:</strong>
+        <div>{{user.email}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-actions">
+    <a href="/profile/edit" class="btn">Editar perfil</a>
+    <form action="/profile/delete" method="POST" style="margin-top:0;">
+      <button type="submit" class="btn btn-danger">Excluir conta</button>
+    </form>
+  </div>
+</div>

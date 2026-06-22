@@ -1,0 +1,29 @@
+<div class="auth-container">
+  <h2>Editar Perfil</h2>
+  {{#if message}}
+    <div class="message">{{message}}</div>
+  {{/if}}
+  <form action="/profile/edit" method="POST">
+    <div class="form-control">
+      <label for="name">Nome:</label>
+      <input id="name" name="name" type="text" value="{{user.name}}" autocomplete="name" required />
+    </div>
+    <div class="form-control">
+      <label for="email">Email:</label>
+      <input id="email" name="email" type="email" value="{{user.email}}" autocomplete="email" required />
+    </div>
+    <div class="form-control">
+      <label for="password">Nova senha:</label>
+      <input id="password" name="password" type="password" autocomplete="new-password" />
+      <small>Use no mínimo 8 caracteres, incluindo letras, números e símbolos.</small>
+    </div>
+    <div class="form-control">
+      <label for="confirmPassword">Confirmar nova senha:</label>
+      <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" />
+    </div>
+    <div class="tought-actions">
+      <button type="submit" class="btn">Salvar alterações</button>
+      <a href="/profile" class="btn">Voltar</a>
+    </div>
+  </form>
+</div>

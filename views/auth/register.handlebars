@@ -1,0 +1,28 @@
+<div class="auth-container">
+  <h2>Registrar</h2>
+  {{#if message}}
+    <div class="message">{{message}}</div>
+  {{/if}}
+  <form action="/register" method="POST">
+    <div class="form-control">
+      <label for="name">Nome:</label>
+      <input id="name" name="name" type="text" value="{{user.name}}" required />
+    </div>
+    <div class="form-control">
+      <label for="email">Email:</label>
+      <input id="email" name="email" type="email" value="{{user.email}}" required />
+    </div>
+    <div class="form-control">
+      <label for="password">Senha:</label>
+      <input id="password" name="password" type="password" required />
+    </div>
+    <div class="form-control">
+      <label for="confirmPassword">Confirme a senha:</label>
+      <input id="confirmPassword" name="confirmPassword" type="password" required />
+    </div>
+    <div class="tought-actions">
+      <button type="submit" class="btn">Criar conta</button>
+      <a href="/login" class="btn">Voltar</a>
+    </div>
+  </form>
+</div>
